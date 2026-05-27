@@ -21,8 +21,9 @@ from fastapi.responses import JSONResponse, Response, FileResponse
 app = FastAPI(title="Christian AI Assistant")
 
 # Import src modules after path is set
-from src.models import ChatRequest, ChatResponse, HealthResponse
+from src.models import ChatRequest, ChatResponse, HealthResponse, ImageGenerationRequest, ImageGenerationResponse
 from src.chat import process_chat
+from src.image_gen import generate_christian_image
 
 @app.get("/")
 async def root():
@@ -50,6 +51,31 @@ async def chat(request: ChatRequest):
 @app.get("/favicon.ico")
 async def favicon():
     return Response(content=b"", status_code=204)
+
+@app.post("/generate-image", response_model=ImageGenerationResponse)
+async def generate_image(request: ImageGenerationRequest):
+    result = generate_christian_image(request.prompt)
+    if result.get("blocked"):
+        return ImageGenerationResponse(
+            image_url=None,
+            prompt=request.prompt,
+            success=False,
+            error=result.get("error", "Content blocked for safety"),
+            blocked=True
+        )
+    elif result.get("image_url"):
+        return ImageGenerationResponse(
+            image_url=result["image_url"],
+            prompt=request.prompt,
+            success=True
+        )
+    else:
+        return ImageGenerationResponse(
+            image_url=None,
+            prompt=request.prompt,
+            success=False,
+            error=result.get("error", "Image generation failed")
+        )
 
 # For Vercel serverless
 handler = app
