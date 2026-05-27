@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 app = FastAPI(title="Christian AI Assistant")
 
@@ -26,7 +26,7 @@ from src.chat import process_chat
 
 @app.get("/")
 async def root():
-    return {"message": "Christian AI Assistant API"}
+    return {"message": "Christian AI Assistant API", "version": "1.0"}
 
 @app.get("/health", response_model=HealthResponse)
 async def health():
@@ -45,6 +45,10 @@ async def chat(request: ChatRequest):
             status_code=500,
             content={"detail": str(e)}
         )
+
+@app.get("/favicon.ico")
+async def favicon():
+    return Response(content=b"", status_code=204)
 
 # For Vercel serverless
 handler = app
