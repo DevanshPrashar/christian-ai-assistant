@@ -1,0 +1,34 @@
+# Environment
+.env
+.env.local
+__pycache__/
+*.pyc
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/*.json
+!data/kjv_bible.json
+
+# Chroma DB
+chroma_db/
+.chroma/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+*.egg-info/
