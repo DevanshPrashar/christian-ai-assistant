@@ -152,13 +152,22 @@ def build_minimax_messages(conversation_history: list[dict], new_message: str,
             "content": msg["content"]
         })
 
+    # Check if message is off-topic (not about Christianity/Bible/faith)
+    off_topic_patterns = ["llm", "what are large language", "who is", "what is the capital",
+                          "science", "history", "geography", "math", "physics", "ai ", "artificial intelligence"]
+    is_off_topic = any(pattern in new_message.lower() for pattern in off_topic_patterns)
+
     # Add the new user message with scripture context
     if scripture_context:
-        enhanced_message = (
-            f"{new_message}\n\n[SCRIPTURE CONTEXT]\n{scripture_context}\n[/SCRIPTURE CONTEXT]"
-        )
+        enhanced_message = f"{new_message}\n\n[SCRIPTURE CONTEXT]\n{scripture_context}\n[/SCRIPTURE CONTEXT]"
     else:
         enhanced_message = new_message
+
+    # Add explicit instruction if off-topic
+    if is_off_topic:
+        enhanced_message += ("\n\n[IMPORTANT: If your question is NOT about Christianity, "
+                              "the Bible, faith, or spiritual matters, you MUST politely decline "
+                              "and offer to help with Christian topics instead.]")
 
     messages.append({
         "role": "user",
@@ -200,6 +209,21 @@ def extract_verse_references(text: str) -> list[VerseReference]:
             pass
 
     return references
+
+
+def is_off_topic_question(text: str) -> bool:
+    """Check if question is not related to Christianity/Bible/faith."""
+    off_topic_keywords = [
+        "llm", "large language", "language model", "artificial intelligence", "machine learning",
+        "what is the capital", "who is the president", "countries", "geography",
+        "science", "physics", "chemistry", "biology", "math", "mathematics",
+        "history of", "history about", "invented by", "discovered by",
+        "stock market", "weather", "sports", "celebrity", "entertainment",
+        "ai model", "neural network", "algorithm", "programming", "code"
+    ]
+    text_lower = text.lower()
+    # Check if it's clearly off-topic
+    return any(keyword in text_lower for keyword in off_topic_keywords)
 
 
 def process_chat(request: ChatRequest) -> ChatResponse:
@@ -244,6 +268,20 @@ def process_chat(request: ChatRequest) -> ChatResponse:
                 flagged=True,
                 denial_message=tricky_result.message
             )
+
+    # Step 1.5: Check if off-topic (not about Christianity/Bible/faith)
+    if is_off_topic_question(request.message):
+        conversation_id = request.conversation_id or create_conversation()
+        add_to_conversation(conversation_id, "user", request.message)
+        add_to_conversation(conversation_id, "assistant",
+            "I'm sorry, but I'm designed specifically to help with questions about Christianity, the Bible, faith, and spiritual matters. I wouldn't be the right resource for this particular question. Is there something related to your faith journey I can help you with today?")
+
+        return ChatResponse(
+            response="I'm sorry, but I'm designed specifically to help with questions about Christianity, the Bible, faith, and spiritual matters. I wouldn't be the right resource for this particular question. Is there something related to your faith journey I can help you with today?",
+            verses=[],
+            conversation_id=conversation_id,
+            flagged=False
+        )
 
     # Step 2: Check moderation
     moderation_result = check_input(request.message)
