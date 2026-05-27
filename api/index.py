@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, Response, FileResponse
 
 app = FastAPI(title="Christian AI Assistant")
 
@@ -26,7 +26,8 @@ from src.chat import process_chat
 
 @app.get("/")
 async def root():
-    return {"message": "Christian AI Assistant API", "version": "1.0"}
+    # Serve the static frontend
+    return FileResponse(os.path.join(project_root, "static", "index.html"))
 
 @app.get("/health", response_model=HealthResponse)
 async def health():
