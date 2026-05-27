@@ -213,17 +213,31 @@ def extract_verse_references(text: str) -> list[VerseReference]:
 
 def is_off_topic_question(text: str) -> bool:
     """Check if question is not related to Christianity/Bible/faith."""
+    text_lower = text.lower()
+
+    # Check for obvious off-topic patterns
     off_topic_keywords = [
         "llm", "large language", "language model", "artificial intelligence", "machine learning",
-        "what is the capital", "who is the president", "countries", "geography",
-        "science", "physics", "chemistry", "biology", "math", "mathematics",
-        "history of", "history about", "invented by", "discovered by",
+        "what is the capital", "countries", "geography",
+        "physics", "chemistry", "biology", "mathematics",
+        "invented by", "discovered by",
         "stock market", "weather", "sports", "celebrity", "entertainment",
-        "ai model", "neural network", "algorithm", "programming", "code"
+        "neural network", "algorithm", "programming", "code"
     ]
-    text_lower = text.lower()
-    # Check if it's clearly off-topic
-    return any(keyword in text_lower for keyword in off_topic_keywords)
+
+    for keyword in off_topic_keywords:
+        if keyword in text_lower:
+            return True
+
+    # Special check for president/government questions
+    if "president" in text_lower and "bible" not in text_lower and "christian" not in text_lower:
+        return True
+
+    # Check for science (but not "science and faith" or similar)
+    if "science" in text_lower and "faith" not in text_lower and "god" not in text_lower:
+        return True
+
+    return False
 
 
 def process_chat(request: ChatRequest) -> ChatResponse:
@@ -277,10 +291,19 @@ def process_chat(request: ChatRequest) -> ChatResponse:
             "I'm sorry, but I'm designed specifically to help with questions about Christianity, the Bible, faith, and spiritual matters. I wouldn't be the right resource for this particular question. Is there something related to your faith journey I can help you with today?")
 
         return ChatResponse(
-            response="I'm sorry, but I'm designed specifically to help with questions about Christianity, the Bible, faith, and spiritual matters. I wouldn't be the right resource for this particular question. Is there something related to your faith journey I can help you with today?",
+            response="I'm sorry, but I'm specifically designed to help with questions about Christianity, the Bible, faith, and spiritual matters. This question is outside my area of focus, so I can't provide a helpful answer. Is there something related to your faith journey I can help you with today?",
             verses=[],
             conversation_id=conversation_id,
             flagged=False
+        )
+
+    # Step 1.6: Add off-topic warning in message for MiniMax (fallback safety net)
+    user_message = request.message
+    if is_off_topic_question(request.message):
+        user_message = (
+            "[SYSTEM REMINDER: This user is asking about a non-Christian topic. "
+            "You MUST politely decline to answer and redirect them to ask about faith/Bible topics instead.]\n\n"
+            f"User question: {request.message}"
         )
 
     # Step 2: Check moderation
@@ -303,7 +326,7 @@ def process_chat(request: ChatRequest) -> ChatResponse:
     conversation_history = get_conversation(conversation_id)
 
     # Step 3: Retrieve relevant verses
-    scripture_context = build_context_for_query(request.message)
+    scripture_context = build_context_for_query(user_message)
 
     # Step 4: Build messages and call MiniMax with retry for corrupted responses
     max_retries = 3
@@ -319,7 +342,7 @@ def process_chat(request: ChatRequest) -> ChatResponse:
             # Build messages with scripture context
             messages = build_minimax_messages(
                 conversation_history,
-                request.message,
+                user_message,
                 scripture_context
             )
 
