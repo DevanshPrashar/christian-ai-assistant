@@ -5,7 +5,9 @@ import json
 import os
 from typing import Optional
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+# Use project root (one level up from src/)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 BIBLE_JSON_PATH = os.path.join(DATA_DIR, "kjv_bible.json")
 
 # Cache for bible data
