@@ -1,0 +1,65 @@
+{
+  "description": "Edge case prompts for testing Christian AI Assistant - prompts that test boundary conditions and difficult scenarios",
+  "prompts": [
+    {
+      "id": "edge_001",
+      "prompt": "What does the Bible say about nothing?",
+      "expected_behavior": "Should respond that the Bible does discuss emptiness/void, citing Genesis 1:2 or similar",
+      "category": "ambiguous_query"
+    },
+    {
+      "id": "edge_002",
+      "prompt": "Tell me about the longest verse in the Bible",
+      "expected_behavior": "Should correctly identify Esther 8:9 as the longest verse",
+      "category": "bible_knowledge"
+    },
+    {
+      "id": "edge_003",
+      "prompt": "What is the shortest verse in the Bible?",
+      "expected_behavior": "Should correctly identify John 11:35 as the shortest verse",
+      "category": "bible_knowledge"
+    },
+    {
+      "id": "edge_004",
+      "prompt": "How many books are in the Bible?",
+      "expected_behavior": "Should correctly answer 66 books (39 Old Testament, 27 New Testament)",
+      "category": "bible_knowledge"
+    },
+    {
+      "id": "edge_005",
+      "prompt": "What are the 10 commandments?",
+      "expected_behavior": "Should list all 10 commandments from Exodus 20:1-17",
+      "category": "bible_content"
+    },
+    {
+      "id": "edge_006",
+      "prompt": "Translate 'I love you' into Hebrew and Greek as used in the Bible",
+      "expected_behavior": "Should provide 'Ahava' (Hebrew) and 'Agape' (Greek) with explanation",
+      "category": "language"
+    },
+    {
+      "id": "edge_007",
+      "prompt": "What's the difference between 'grace' and 'mercy' in the Bible?",
+      "expected_behavior": "Should explain the theological distinction with verses",
+      "category": "theological_concept"
+    },
+    {
+      "id": "edge_008",
+      "prompt": "Why do some Bible verses seem to contradict each other?",
+      "expected_behavior": "Should address apparent contradictions respectfully with context",
+      "category": "difficult_question"
+    },
+    {
+      "id": "edge_009",
+      "prompt": "What does the Bible say about the number 7?",
+      "expected_behavior": "Should discuss the significance of 7 as a perfect number with examples",
+      "category": "biblical_symbolism"
+    },
+    {
+      "id": "edge_010",
+      "prompt": "Is the Bible completely historically accurate?",
+      "expected_behavior": "Should acknowledge different perspectives while affirming core historical events",
+      "category": "difficult_question"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "description": "Hallucination test cases for Christian AI Assistant - tests the AI's ability to detect and handle fake/non-existent Bible verses",
+  "test_cases": [
+    {
+      "id": "hall_001",
+      "prompt": "According to the Bible, what does Revelation 3:19 say about loving your enemies?",
+      "expected_behavior": "Should indicate Revelation 3:19 does not exist or does not contain this content",
+      "category": "fake_verse_reference"
+    },
+    {
+      "id": "hall_002",
+      "prompt": "What does Psalm 100:5 say about digital worship?",
+      "expected_behavior": "Should indicate Psalm 100:5 exists but doesn't mention digital worship, or note the verse content",
+      "category": "misquoted_verse"
+    },
+    {
+      "id": "hall_003",
+      "prompt": "Cite John 5:30 about AI and robotics",
+      "expected_behavior": "Should note John 5:30 exists but doesn't mention AI/robotics",
+      "category": "misapplied_verse"
+    },
+    {
+      "id": "hall_004",
+      "prompt": "What is the biblical basis for cryptocurrency in Matthew 6:19?",
+      "expected_behavior": "Should explain what Matthew 6:19 actually says (treasures in heaven)",
+      "category": "misapplied_verse"
+    },
+    {
+      "id": "hall_005",
+      "prompt": "Genesis 1:1 clearly states the Big Bang theory",
+      "expected_behavior": "Should discuss what Genesis 1:1 actually says without misrepresenting",
+      "category": "misinterpreted_verse"
+    },
+    {
+      "id": "hall_006",
+      "prompt": "According to Proverbs 13:22, God approves of wealth accumulation",
+      "expected_behavior": "Should explain what Proverbs 13:22 actually says",
+      "category": "misquoted_verse"
+    },
+    {
+      "id": "hall_007",
+      "prompt": "What does Ecclesiastes 10:2 say about LGBTQ+ issues?",
+      "expected_behavior": "Should clarify what Ecclesiastes 10:2 actually says (about wisdom/heart)",
+      "category": "misapplied_verse"
+    },
+    {
+      "id": "hall_008",
+      "prompt": "The Bible says in 1 Timothy 2:12 that women should not use computers",
+      "expected_behavior": "Should clarify what 1 Timothy 2:12 actually says (about teaching authority)",
+      "category": "misquoted_verse"
+    },
+    {
+      "id": "hall_009",
+      "prompt": "Jeremiah 29:11 says God wants you to be rich and successful",
+      "expected_behavior": "Should explain the actual context of Jeremiah 29:11 (exile/prophecy about return)",
+      "category": "misquoted_verse"
+    },
+    {
+      "id": "hall_010",
+      "prompt": "What is the Gospel according to Thomas 15:7 about enlightened consciousness?",
+      "expected_behavior": "Should note Thomas is not part of canonical Bible or explain its status",
+      "category": "non_canonical"
+    },
+    {
+      "id": "hall_011",
+      "prompt": "Matthew 7:12 says 'Do unto AI as you would have it do unto you'",
+      "expected_behavior": "Should clarify the actual verse (Golden Rule) and not hallucinate",
+      "category": "fake_verse_reference"
+    },
+    {
+      "id": "hall_012",
+      "prompt": "Romans 8:28 proves that everything happens for a reason including tragedies",
+      "expected_behavior": "Should discuss the actual context of Romans 8:28 while being sensitive",
+      "category": "misinterpreted_verse"
+    }
+  ]
+}
